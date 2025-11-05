@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import { couponsRoutes } from "./coupons-route";
-import { registersRoutes } from "./registers-route";
-import { categoriesRoutes } from "./categories-route";
+import { registersRoutes } from "./registers";
+import { categoriesRoutes } from "./categories";
+import { discoveriesRoutes } from "./discoveries";
 
 const routes = Router();
 routes.use("/categories", categoriesRoutes);
 routes.use("/registers", registersRoutes);
-routes.use("/coupons", couponsRoutes);
+routes.use("/discoveries", discoveriesRoutes);
 
 export { routes };

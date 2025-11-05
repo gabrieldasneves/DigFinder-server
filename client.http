@@ -1,0 +1,52 @@
+# variables
+@base_url = http://localhost:3333
+
+# requests
+
+### Get user profile
+GET {{base_url}}/users/profile
+
+### Get all categories
+GET {{base_url}}/categories
+
+### Get all registers
+GET {{base_url}}/registers
+
+### Get all registers by category
+GET {{base_url}}/registers/category/1
+
+### Create a discovery
+POST {{base_url}}/discoveries
+Content-Type: application/json
+
+{
+  "title": "Discovery 1",
+  "description": "Description 1",
+  "latitude": -23.5505,
+  "longitude": -46.6333,
+  "discoveryDate": "2025-01-01",
+  "categoryIds": ["1"]
+}
+
+### Get all discoveries
+GET {{base_url}}/discoveries
+
+### Get a discovery by id
+GET {{base_url}}/discoveries/1
+
+### Update a discovery
+PUT {{base_url}}/discoveries/1
+Content-Type: application/json
+
+{
+  "title": "Discovery 1",
+  "description": "Description 1",
+  "latitude": -23.5505,
+  "longitude": -46.6333,
+  "discoveryDate": "2025-01-01",
+  "categoryIds": ["1"]
+}
+
+### Delete a discovery
+DELETE {{base_url}}/discoveries/1   
+

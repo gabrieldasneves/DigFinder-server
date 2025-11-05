@@ -11,12 +11,12 @@ class RegistersController {
 
       const { category_id } = paramsSchema.parse(request.params);
 
-      const registers = await prisma.register.findMany({
-        where: { categoryId: category_id },
-        orderBy: { name: "asc" },
+      const discoveries = await prisma.discovery.findMany({
+        where: { categories: { some: { id: category_id } } },
+        orderBy: { title: "asc" },
       });
 
-      return response.json(registers);
+      return response.json(discoveries);
     } catch (error) {
       next(error);
     }
@@ -30,14 +30,14 @@ class RegistersController {
 
       const { id } = paramsSchema.parse(request.params);
 
-      const register = await prisma.register.findUnique({
+      const discovery = await prisma.discovery.findUnique({
         where: { id },
         include: {
-          rules: true,
+          categories: true,
         },
       });
 
-      return response.json(register);
+      return response.json(discovery);
     } catch (error) {
       next(error);
     }

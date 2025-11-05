@@ -1,16 +1,10 @@
-import { Router } from "express";
-import { prisma } from "../database/prisma";
+import { Router } from "express"
 
-const router = Router();
+import { CategoriesController } from "@/controllers/categories-controller"
 
-// Listar todas as categorias
-router.get("/", async (req, res) => {
-  try {
-    const categories = await prisma.category.findMany();
-    return res.json(categories);
-  } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
+const categoriesRoutes = Router()
+const categoriesController = new CategoriesController()
 
-export default router;
+categoriesRoutes.get("/", categoriesController.index)
+
+export { categoriesRoutes }
