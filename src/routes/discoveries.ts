@@ -5,18 +5,38 @@ import { authenticateToken } from "@/middlewares/authenticate";
 import { Discovery } from "@prisma/client";
 import { DiscoveriesController } from "@/controllers/discoveries-controller";
 
-const router = Router();
+const discoveriesRoutes = Router();
 
 const discoveriesController = new DiscoveriesController();
 
-router.post("/", authenticateToken, discoveriesController.createDiscovery);
+discoveriesRoutes.post(
+  "/createDiscovery",
+  authenticateToken,
+  discoveriesController.createDiscovery
+);
 
-router.get("/", authenticateToken, discoveriesController.getDiscoveries);
+discoveriesRoutes.get(
+  "/getDiscoveries",
+  authenticateToken,
+  discoveriesController.getDiscoveries
+);
 
-router.get("/:id", authenticateToken, discoveriesController.getDiscoveryById);
+discoveriesRoutes.get(
+  "/getDiscoveryById/:id",
+  authenticateToken,
+  discoveriesController.getDiscoveryById
+);
 
-router.put("/:id", authenticateToken, discoveriesController.updateDiscovery);
+discoveriesRoutes.put(
+  "/updateDiscovery/:id",
+  authenticateToken,
+  discoveriesController.updateDiscovery
+);
 
-router.delete("/:id", authenticateToken, discoveriesController.deleteDiscovery);
+discoveriesRoutes.delete(
+  "/deleteDiscovery/:id",
+  authenticateToken,
+  discoveriesController.deleteDiscovery
+);
 
-export { router as discoveriesRoutes };
+export { discoveriesRoutes };
