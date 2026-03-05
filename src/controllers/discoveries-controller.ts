@@ -9,6 +9,7 @@ const discoverySchema = z.object({
   longitude: z.number(),
   discoveryDate: z.string(),
   categoryIds: z.array(z.string().uuid()),
+  imageUrls: z.array(z.string().url()).optional(),
 });
 
 class DiscoveriesController {
@@ -25,6 +26,7 @@ class DiscoveriesController {
         longitude,
         discoveryDate,
         categoryIds,
+        imageUrls = [],
       } = discoverySchema.parse(request.body);
       const userId = request.user.id;
 
@@ -39,9 +41,17 @@ class DiscoveriesController {
           categories: {
             connect: categoryIds.map((id) => ({ id })),
           },
+          images: {
+            create: imageUrls.map((url, index) => ({
+              url,
+              isPrimary: index === 0,
+              orderIndex: index,
+            })),
+          },
         },
         include: {
           categories: true,
+          images: true,
         },
       });
 
