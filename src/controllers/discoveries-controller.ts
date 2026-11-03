@@ -102,8 +102,13 @@ class DiscoveriesController {
       const userId = request.user.id;
       const discoveries = await prisma.discovery.findMany({
         where: { userId },
+        orderBy: { discoveryDate: "desc" },
         include: {
           categories: true,
+          images: {
+            where: { isPrimary: true },
+            take: 1,
+          },
         },
       });
 

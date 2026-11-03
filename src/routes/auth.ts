@@ -3,6 +3,8 @@ import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { z } from "zod";
+import { authenticateToken } from "@/middlewares/authenticate";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -153,6 +155,50 @@ router.get("/me", async (req, res) => {
   } catch (error) {
     console.error("Error in me:", error);
     res.status(401).json({ error: "Invalid token" });
+  }
+});
+
+const updateProfileSchema = z.object({
+  name: z.string().min(2).optional(),
+  avatarUrl: z.string().url().optional(),
+});
+
+router.put("/me", authenticateToken, async (req, res) => {
+  try {
+    const parsed = updateProfileSchema.parse(req.body);
+    if (parsed.name === undefined && parsed.avatarUrl === undefined) {
+      return res.status(400).json({ error: "No fields to update" });
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: req.user.id },
+      data: {
+        ...(parsed.name !== undefined ? { name: parsed.name } : {}),
+        ...(parsed.avatarUrl !== undefined
+          ? { avatarUrl: parsed.avatarUrl }
+          : {}),
+      },
+    });
+
+    const { password: _, ...userWithoutPassword } = updated;
+    return res.json(userWithoutPassword);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: error.errors[0]?.message });
+    }
+    console.error("Error in PUT /me:", error);
+    return res.status(500).json({ error: "Failed to update profile" });
+  }
+});
+
+router.delete("/me", authenticateToken, async (req, res) => {
+  try {
+    // Firebase Storage files are not removed here — only DB records.
+    await prisma.user.delete({ where: { id: req.user.id } });
+    return res.status(204).send();
+  } catch (error) {
+    console.error("Error in DELETE /me:", error);
+    return res.status(500).json({ error: "Failed to delete account" });
   }
 });
 
