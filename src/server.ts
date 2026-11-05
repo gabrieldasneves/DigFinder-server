@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth";
 import { categoriesRoutes } from "./routes/categories";
 import { discoveriesRoutes } from "./routes/discoveries";
 
-const PORT = 3333;
+const PORT = Number(process.env.PORT) || 3333;
 
 const app = express();
 
@@ -19,4 +19,4 @@ app.use("/categories", categoriesRoutes);
 app.use("/discoveries", discoveriesRoutes);
 app.use(routes);
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () => console.log(`Server is running on port ${PORT}`));
